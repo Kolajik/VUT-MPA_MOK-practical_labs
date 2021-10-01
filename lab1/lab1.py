@@ -1,5 +1,6 @@
 import numpy as np
 import lib.lattice as lt
+import matplotlib.pyplot as plt
 
 
 def listVsArrays(number):
@@ -58,6 +59,36 @@ def compareDistances(basis1, basis2, vector):
         print("Both distances are equal ({}).".format(basis1Dist))
 
 
+def getPoints(x1, y1, x2, y2):
+    xval = []
+    yval = []
+    xval.append(0)
+    yval.append(0)
+    for a in range(-10, 10):
+        for b in range(-10, 10):
+            xnew = a * x1 + b * x2
+            xval.append(xnew)
+            ynew = a * y1 + b * y2
+            yval.append(ynew)
+
+    return xval, yval
+
+
+def plotGraph(base1, base2, vector):
+    title = "base1=" + str(base1) + ",base2=" + str(base2) + "vector=" + str(vector)
+
+    ax = plt.axes(projection='3d')
+
+    xval, yval = getPoints(base1[0][0], base2[0][0], base1[1][1], base2[1][1])
+    plt.title(title)
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.axis([0, (max(xval) / 2), 0, (max(yval) / 2)])
+
+    plt.scatter(xval, yval)
+    plt.show()
+
+
 if __name__ == '__main__':
     # listVsArrays(9)
 
@@ -72,3 +103,5 @@ if __name__ == '__main__':
     print(distance_LatticeVector(basis1, v2))
 
     compareDistances(basis2, basis1, v1)
+
+    plotGraph(basis1, basis2, v1)

@@ -1,5 +1,5 @@
 import numpy as np
-import lib.lattice as lt
+import libraries.lattice as lt
 import matplotlib.pyplot as plt
 
 
@@ -77,9 +77,9 @@ def getPoints(x1, y1, x2, y2):
 def plotGraph(base1, base2, vector):
     title = "base1=" + str(base1) + ",base2=" + str(base2) + "vector=" + str(vector)
 
-    ax = plt.axes(projection='3d')
+    # ax = plt.axes(projection='3d')
 
-    xval, yval = getPoints(base1[0][0], base2[0][0], base1[1][1], base2[1][1])
+    xval, yval = getPoints(5, 1, 0, 2)
     plt.title(title)
     plt.xlabel('x')
     plt.ylabel('y')
@@ -96,12 +96,24 @@ if __name__ == '__main__':
 
     # goodOrBadBasis()
 
-    basis1 = np.array([[2, 0, 0], [1, 1, 0], [0, 0, 3]])
-    basis2 = np.array([[98, -22, -4], [-4, 1, 0], [-10, 2, 1]])
+    basis1 = np.array(
+        [
+            [2, 0, 0],
+            [1, 1, 0],
+            [0, 0, 3]
+        ]
+    )
+    basis2 = np.array(
+        [
+            [98, -22, -4],
+            [-4, 1, 0],
+            [-10, 2, 1]
+        ]
+    )
     v1 = np.array([-5, 1, 0])
     v2 = np.array([-10, 1, 13])
-    print(distance_LatticeVector(basis1, v2))
+    # print(distance_LatticeVector(basis1, v2))
 
-    compareDistances(basis2, basis1, v1)
+    # compareDistances(basis2, basis1, v1)
 
     plotGraph(basis1, basis2, v1)

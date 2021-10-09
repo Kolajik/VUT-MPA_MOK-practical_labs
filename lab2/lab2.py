@@ -1,6 +1,5 @@
 import numpy as np
-import libraries.lattice as lt
-import matplotlib.pyplot as plt
+import lib.lattice as lt
 
 
 def listVsArrays(number):
@@ -59,36 +58,6 @@ def compareDistances(basis1, basis2, vector):
         print("Both distances are equal ({}).".format(basis1Dist))
 
 
-def getPoints(x1, y1, x2, y2):
-    xval = []
-    yval = []
-    xval.append(0)
-    yval.append(0)
-    for a in range(-10, 10):
-        for b in range(-10, 10):
-            xnew = a * x1 + b * x2
-            xval.append(xnew)
-            ynew = a * y1 + b * y2
-            yval.append(ynew)
-
-    return xval, yval
-
-
-def plotGraph(base1, base2, vector):
-    title = "base1=" + str(base1) + ",base2=" + str(base2) + "vector=" + str(vector)
-
-    # ax = plt.axes(projection='3d')
-
-    xval, yval = getPoints(5, 1, 0, 2)
-    plt.title(title)
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.axis([0, (max(xval) / 2), 0, (max(yval) / 2)])
-
-    plt.scatter(xval, yval)
-    plt.show()
-
-
 if __name__ == '__main__':
     # listVsArrays(9)
 
@@ -96,24 +65,10 @@ if __name__ == '__main__':
 
     # goodOrBadBasis()
 
-    basis1 = np.array(
-        [
-            [2, 0, 0],
-            [1, 1, 0],
-            [0, 0, 3]
-        ]
-    )
-    basis2 = np.array(
-        [
-            [98, -22, -4],
-            [-4, 1, 0],
-            [-10, 2, 1]
-        ]
-    )
+    basis1 = np.array([[2, 0, 0], [1, 1, 0], [0, 0, 3]])
+    basis2 = np.array([[98, -22, -4], [-4, 1, 0], [-10, 2, 1]])
     v1 = np.array([-5, 1, 0])
     v2 = np.array([-10, 1, 13])
-    # print(distance_LatticeVector(basis1, v2))
+    print(distance_LatticeVector(basis1, v2))
 
-    # compareDistances(basis2, basis1, v1)
-
-    plotGraph(basis1, basis2, v1)
+    compareDistances(basis2, basis1, v1)

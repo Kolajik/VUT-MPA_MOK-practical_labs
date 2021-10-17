@@ -2,6 +2,7 @@ import numpy as np
 from numpy.polynomial import polynomial as poly
 from numpy.polynomial import Polynomial as P
 
+
 # Trying out polynomials
 
 
@@ -130,7 +131,7 @@ def encrypt(seed, pk, dim, q, t, poly_mod, pt):
     scaled_pt = P((delta * m) % q)
 
     ct0 = poly.polyadd(scaled_pt.coef, poly.polyadd(e1.coef,
-                       poly.polymul(pk[0].coef, u.coef)))
+                                                    poly.polymul(pk[0].coef, u.coef)))
     ct0 = P(ct0 % q)
 
     ct1 = poly.polyadd(e2.coef, poly.polymul(pk[1].coef, u.coef))

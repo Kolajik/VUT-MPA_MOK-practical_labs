@@ -1,3 +1,7 @@
+# DISCLAIMER: I could not run this laboratory at all. I have tried this on two different devices
+# (notebook and a computer), with different versions of Python (3.6, 3.9 and 3.10), different versions
+# of wheel/pypi/pqcrypto packages...
+
 import ctypes, os
 import inputs as inp
 import pqcrypto

@@ -8,36 +8,40 @@ def randPoly(deg, mod, secret):
     coef_poly = np.random.randint(low=-mod, high=mod, size=deg)
     # coef_poly[deg-1] = secret
     coef_poly = np.append(coef_poly, secret)
+    coef_poly = coef_poly % mod
     p1 = P(coef_poly)
     print("Created polynomial: {}".format(p1.coef))
     return p1
 
 
-def genShares(p, s, mod):
+def genShares(p, n, mod):
+    print("\n... Generating shares ...\n")
     shares = []
-    for i in range(0, s):
+    for i in range(0, n):
         x = np.random.randint(low=-mod, high=mod, size=1)
         y = np.polyval(p.coef, x) % mod
-        shares.append([x[0], int(y[0])])
+        shares.append([x[0] % mod, int(y[0]) % mod])
     print("Shares generated: {}".format(shares))
     return shares
 
 
 def solveEquations(shares, deg, t, mod):
+    print("\n... Solving the equations ...\n")
     coefficients = []
     results = []
     for i in range(0, t):
         tmp = []
         results.append(shares[i][1])
-        for j in range(deg, 1, -1):
+        for j in range(deg, 0, -1):
             x = shares[i][0] ** j % mod
             tmp.append(x)
         tmp.append(1)
         coefficients.append(tmp)
-    print("coefficients: {}\nresults: {}".format(coefficients, results))
+    # print("coefficients: {}\nresults: {}".format(coefficients, results))
     A = sympy.Matrix(coefficients)
-    print("A: {}".format(A))
+    print("Equations: {}".format(A))
     B = sympy.Matrix(results)
+    print("Results of equations: {}".format(B))
 
     det = int(A.det())
     if gcd(det, mod) == 1:
@@ -48,17 +52,12 @@ def solveEquations(shares, deg, t, mod):
 
 
 if __name__ == '__main__':
-    np.random.seed(665)
-    mod = 17
+    mod = 19
     n = 4
     t = 3
     degree = t-1
-    secret = 12
+    secret = 17 % mod
 
     p = randPoly(degree, mod, secret)
-
-    testing = P([3, 14, 12])
-    testingShares = [[4, 2], [2, 14], [1, 10], [3, 5]]
-
-    shares = genShares(testing, degree, mod)
-    solveEquations(shares=testingShares, deg=degree+1, t=t, mod=mod)
+    shares = genShares(p, n, mod)
+    solveEquations(shares=shares, deg=degree, t=t, mod=mod)

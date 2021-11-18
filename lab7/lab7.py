@@ -79,7 +79,7 @@ if __name__ == '__main__':
     n = 20
     t = 3
     degree = t - 1
-    secret = 12 % mod
+    secret = 5645  % mod
 
     p = randPoly(degree, mod, secret)
     shares = genShares(p, n, mod)

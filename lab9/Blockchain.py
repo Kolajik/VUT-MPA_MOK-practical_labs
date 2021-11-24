@@ -12,21 +12,27 @@ class Blockchain:
         self.chain = []
         self.mempool = []
 
-    def new_block(self, previous_hash=None, difficulty=0):
+    def new_block(self, difficulty=0):
         self.counter += 1
+        time_now = time.strftime("%m/%d/%Y, %H:%M:%S")
 
-        str_trx = []
-        for trx in self.mempool:
-            str_trx.append(str(trx))
+        if len(self.chain) != 0:
+            previous_hash = self.chain[-1]['block_hash']
+        else:
+            previous_hash = None
+
+        hash_input = [time_now, previous_hash, str(self.mempool).encode('utf-8')]
+        nonce, block_hash = self.proof_of_work(hash_input)
 
         block = {
             "index": self.counter,
-            "timestamp": time.strftime("%m/%d/%Y, %H:%M:%S"),
+            "timestamp": time_now,
             "difficulty": self.difficulty,
             "transactions": self.mempool,
-            "transactions_hash": hashlib.sha3_256(str(self.mempool).encode('utf-8')),
-            "previous_hash": previous_hash or hashlib.sha3_256(str(str_trx).encode()),
-            "nonce": 0
+            "transactions_hash": hashlib.sha3_256(str(self.mempool).encode('utf-8')).hexdigest(),
+            "previous_hash": previous_hash,
+            "block_hash": block_hash.hexdigest(),
+            "nonce": nonce
         }
         self.mempool = []
 
@@ -34,7 +40,7 @@ class Blockchain:
 
         # json.dump(block).encode()
 
-    def search_transaction(self, transaction_id):
+    def search_transaction(self, transaction_hash):
         if len(self.chain) == 0:
             pass
         else:
@@ -42,7 +48,7 @@ class Blockchain:
             for block in self.chain:
                 j = 0
                 for transaction in block['transactions']:
-                    if transaction.transaction_id == transaction_id:
+                    if transaction.transaction_hash.startswith(transaction_hash):
                         print("Transaction you're looking for: {}\nIn chain with index {}".format(
                             self.chain[i]['transactions'], self.chain[i]['index']))
                         break
@@ -50,14 +56,31 @@ class Blockchain:
                         j += 1
                 i += 1
 
-    def put_trx_in_block(self, transaction):
-        if isinstance(transaction, Transaction.Transaction):
-            self.mempool.append(transaction)
+    def put_trx_in_block(self, transactions):
+        # print(transactions)
+        if isinstance(transactions[0], Transaction.Transaction):
+            for trx in transactions:
+                self.mempool.append(trx)
         else:
-            print("Transaction {} not of a type Transaction.\nActual type: {}".format(transaction, type(transaction)))
+            print("Transaction {} not of a type Transaction.\nActual type: {}".format(transactions, type(transactions)))
 
     def print_blocks(self):
         print(self.chain)
 
     def set_difficulty(self, diff):
         self.difficulty = diff
+
+    def proof_of_work(self, data):
+        start_time = time.time()
+        num_of_zeroes = "0" * self.difficulty
+        nonce = 0
+        current_hash = hashlib.sha3_256(str(data).encode() + str(nonce).encode())
+        if self.difficulty == 0:
+            return nonce, current_hash
+        else:
+            while not str(current_hash.hexdigest()).startswith(num_of_zeroes):
+                nonce += 1
+                current_hash = hashlib.sha3_256(str(data).encode() + str(nonce).encode())
+        print("Proof of work output: \nNonce = {}\nDigest = {}\nTime of computing block [s] = {}\n"
+              .format(nonce, current_hash.hexdigest(), time.time() - start_time))
+        return nonce, current_hash

@@ -55,4 +55,28 @@ contract MOKToken {
         emit Transfer(msg.sender, _to, _value);
         return true;
     }
+
+    function approve(address _delegate, uint256 _numOfTokens) public returns (bool) {
+        require(balanceOf(msg.sender) >= _numOfTokens, "You cannot delegate more tokens than you own.");
+        _allowances[msg.sender][_delegate] = _numOfTokens;
+
+        emit Approval(msg.sender, _delegate, _numOfTokens);
+        return true;
+    }
+
+    function allowance(address _owner, address _spender) public view returns (uint256) {
+        return _allowances[_owner][_spender];
+    }
+
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool) {
+        require(_value <= _balances[_from], "The owner does not have this much tokens.");
+        require(_value <= _allowances[_from][msg.sender], "You are not allowed to spend this much tokens.");
+
+        _balances[_from] = _balances[_from] - _value;
+        _allowances[_from][msg.sender] = _allowances[_from][msg.sender] - _value;
+        _balances[_to] = _balances[_to] + _value;
+
+        emit Transfer(_from, _to, _value);
+        return true;
+    }
 }

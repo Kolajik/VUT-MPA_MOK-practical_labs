@@ -12,7 +12,7 @@ class Blockchain:
         self.chain = []
         self.mempool = []
 
-    def new_block(self, difficulty=0):
+    def new_block(self):
         self.counter += 1
         time_now = time.strftime("%m/%d/%Y, %H:%M:%S")
 
@@ -81,6 +81,6 @@ class Blockchain:
             while not str(current_hash.hexdigest()).startswith(num_of_zeroes):
                 nonce += 1
                 current_hash = hashlib.sha3_256(str(data).encode() + str(nonce).encode())
-        print("Proof of work output: \nNonce = {}\nDigest = {}\nTime of computing block [s] = {}\n"
-              .format(nonce, current_hash.hexdigest(), time.time() - start_time))
+        print("Proof of work output with difficulty = {}\nNonce = {}\nDigest = {}\nTime of computing block [s] = {}\n"
+              .format(self.difficulty, nonce, current_hash.hexdigest(), time.time() - start_time))
         return nonce, current_hash
